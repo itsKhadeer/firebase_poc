@@ -4,7 +4,7 @@ import 'package:sign_in_button/sign_in_button.dart';
 import '../auth.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
