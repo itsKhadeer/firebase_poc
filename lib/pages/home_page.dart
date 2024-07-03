@@ -41,143 +41,30 @@ class HomePage extends State<Home> {
     );
   }
 
-  Stream? UserStream;
-  getontheload() async {
-    UserStream = await DatabaseMethods().getUsers();
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    getontheload();
-    getArticleonload();
-    super.initState();
-  }
-
-  Widget allUserDetails() {
-    return StreamBuilder(
-      stream: UserStream,
-      builder: (context, AsyncSnapshot snapshot) {
-        return snapshot.hasData
-            ? ListView.builder(
-                itemCount: snapshot.data.docs.length,
-                itemBuilder: (context, index) {
-                  DocumentSnapshot ds = snapshot.data.docs[index];
-                  return Material(
-                    elevation: 5.0,
-                    child: Container(
-                      margin: const EdgeInsets.all(10),
-                      padding: const EdgeInsets.all(20),
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.black),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          (ds['photoURL'] != '' && ds['photoURL'] != null)
-                              ? CircleAvatar(
-                                  radius: 50,
-                                  backgroundImage: NetworkImage(ds['photoURL']),
-                                )
-                              : const Text("user image not available"),
-                          Text(
-                            "Name: ${ds['displayName']}",
-                            style: const TextStyle(
-                              color: Colors.blue,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            "Age: ${ds['email']}",
-                            style: const TextStyle(
-                              color: Colors.orange,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            "Location : ${ds['createdAt']}",
-                            style: const TextStyle(
-                              color: Colors.blue,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              )
-            : const Center(child: Text("no data available"));
+  Widget _create_post_button(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.pushNamed(context, '/write_article');
       },
+      child: const Text('Create Post'),
     );
   }
 
-  Stream? ArticleStream;
-  getArticleonload() async {
-    ArticleStream = await DatabaseMethods().getArticles();
-    setState(() {});
+  Widget _read_post_button(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.pushNamed(context, '/read_article');
+      },
+      child: const Text('Read Post'),
+    );
   }
 
-  Widget allArticleDetails() {
-    return StreamBuilder(
-      stream: ArticleStream,
-      builder: (context, AsyncSnapshot snapshot) {
-        return snapshot.hasData
-            ? ListView.builder(
-                itemCount: snapshot.data.docs.length,
-                itemBuilder: (context, index) {
-                  DocumentSnapshot ds = snapshot.data.docs[index];
-                  return Material(
-                    elevation: 5.0,
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: Container(
-                      padding: const EdgeInsets.all(20),
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        color: Colors.white38,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Title: ${ds['title']}",
-                            style: const TextStyle(
-                              color: Colors.blue,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            "Description: ${ds['content']}",
-                            style: const TextStyle(
-                              color: Colors.orange,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            "Author : ${ds['writerId']}",
-                            style: const TextStyle(
-                              color: Colors.blue,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              )
-            : const Center(child: Text("no data available"));
+  Widget _view_all_users_button(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.pushNamed(context, '/view_all_users');
       },
+      child: const Text('View All Users'),
     );
   }
 
@@ -195,12 +82,16 @@ class HomePage extends State<Home> {
           height: double.infinity,
           width: double.infinity,
           padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(child: allUserDetails()),
-            ],
+          child: Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _create_post_button(context),
+                _read_post_button(context),
+                _view_all_users_button(context),
+              ],
+            ),
           )),
     );
   }

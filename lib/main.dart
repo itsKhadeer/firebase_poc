@@ -6,6 +6,9 @@ import 'package:flutterfirebaseproject/pages/profile_page.dart';
 import 'package:flutterfirebaseproject/pages/widget_tree.dart';
 
 import 'pages/home_page.dart';
+import 'pages/read_article_page.dart';
+import 'pages/view_all_users_page.dart';
+import 'pages/write_article_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +34,9 @@ class MyApp extends StatelessWidget {
         '/home': (context) => const Home(),
         '/login': (context) => const LoginPage(),
         '/profile': (context) => ProfilePage(),
+        '/write_article': (context) => const WriteArticle(),
+        '/read_article': (context) => const ReadArticle(),
+        '/view_all_users': (context) => const ViewAllUsers(),
       },
       
     );

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutterfirebaseproject/auth.dart';
 
 import 'data_models.dart';
 
@@ -25,6 +26,23 @@ class DatabaseMethods {
     await _firestore.collection(_usersCollection).doc(user.uid).set(userData);
   }
 
+Future<Map<String, dynamic>?> fetchUser(String uid) async {
+  final snapshot = await _firestore.collection(_usersCollection).where('uid', isEqualTo: uid).get();
+
+  if (snapshot.docs.isEmpty) {
+    return null; // Handle case where user not found
+  }
+
+  final user = snapshot.docs.first.data() as Map<String, dynamic>;
+  final userData = {
+    'uid': user['uid'],
+    'email': user['email'],
+    'displayName': user['displayName'],
+    'photoURL': user['photoURL'],
+    'createdAt': user['createdAt'],
+  };
+  return userData;
+}
   // Get all users stream
   Future<Stream<QuerySnapshot>> getUsers() async {
     return _firestore.collection(_usersCollection).snapshots();
@@ -42,17 +60,22 @@ class DatabaseMethods {
   }
 
   // Add article
-  Future<void> addArticle(Article article) async {
-    final articleData = article.toMap();
-    await _firestore
-        .collection(_articlesCollection)
-        .doc(article.id)
-        .set(articleData);
+  Future<void> addArticle(String content, String title) async {
+    final articleData = Article(
+      id: "id",
+      topicId: "topicId",
+      writerId: Auth().currentUser!.uid,
+      title: title,
+      content: content,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ).toMap();
+    await _firestore.collection(_articlesCollection).doc().set(articleData);
   }
 
   // Get all articles stream
   Future<Stream<QuerySnapshot>> getArticles() async {
-    return _firestore.collection(_articlesCollection).snapshots();
+    return _firestore.collection(_articlesCollection).orderBy('updatedAt', descending: true).snapshots();
   }
 
   // Add comment
@@ -79,7 +102,6 @@ class DatabaseMethods {
   Future<Stream<QuerySnapshot>> getVotes() async {
     return _firestore.collection(_votesCollection).snapshots();
   }
-  
 }
 /*
 
