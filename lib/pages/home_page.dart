@@ -16,8 +16,18 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _userUid() {
-    return Text(
-        "${user?.email ?? 'user email'}/n${user?.phoneNumber ?? '1234567890'}/n${user?.displayName ?? 'user name'}/n${user?.photoURL ?? 'photo url'}/n${user?.uid ?? 'user uid'}");
+    return Column(
+      children: [
+        CircleAvatar(
+          radius: 50,
+          backgroundImage: NetworkImage(user?.photoURL ?? ''),
+        ),
+        Text('Email: ${user?.email ?? 'N/A'}'),
+        Text('Phone Number: ${user?.phoneNumber ?? 'N/A'}'),
+        Text('Display Name: ${user?.displayName ?? 'N/A'}'),
+        Text('User UID: ${user?.uid ?? 'N/A'}'),
+      ],
+    );
   }
 
   Widget _signOutButton() {
